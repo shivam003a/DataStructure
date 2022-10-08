@@ -71,9 +71,7 @@ int Rcount(Node *p){
     if(p!=NULL){
         return Rcount(p->next)+1;
     }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
 // Function for the Sum of element
@@ -91,9 +89,7 @@ int Rsum(Node *p){
     if(p){
         return Rsum(p->next) + p->data;
     }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
 // Function For finding Max of List
