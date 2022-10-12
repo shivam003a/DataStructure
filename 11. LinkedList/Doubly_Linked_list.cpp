@@ -1,113 +1,131 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-struct Node{
-    Node *prev;
-    int data;
-    Node *next;
+class Node{
+    public:
+        Node *prev;
+        int data;
+        Node *next;
 };
 
-// Global Variable
-Node *first;
+class DoublyLL{
+    private:
+        Node *head;
+    public:
 
-void Create(int A[], int n){
-    Node *t, *last;
-
-    first = new Node;
-    first->data = A[0];
-    first->next = first->prev = NULL;
-    last = first;
-
-    for (int i = 1; i < n; i++){
-        t = new Node;
-        t->data = A[i];
-        t->next = last->next;
-        t->prev = last;
-        last->next = t;
-        last = t;
-    }
-}
-
-void Display(Node *p){
-    while (p)
-    {
-        cout << p->data << " ";
-        p = p->next;
-    }
-}
-
-int Length(Node *p){
-    int count = 0;
-    while (p)
-    {
-        count++;
-        p = p->next;
-    }
-    return count;
-}
-
-void Insert(Node *p, int index, int x){
-    Node *t;
-
-    if (index < 0 || index > Length(p)){
-        return;
-    }
-    t = new Node;
-    t->data = x;
-    if (index == 0){
-        t->prev= NULL;
-        t->next = first;
-        first->prev = t;
-        first = t;
-    }
-    else{
-        for(int i=0;i<index-1;i++){
-            p = p->next;
+        DoublyLL(){
+            head->next = head->prev = NULL;
         }
-        t->next = p->next;
-        t->prev = p;
-        if(p->next){
-            p->next->prev = t;
-        }
-        p->next = t;
+        DoublyLL(int A[],int n){
+            Node *last,*t;
+            head = new Node;
+            head->data = A[0];
+            head->prev = head->next = NULL;
+            last = head;
 
-    }
-}
+            for(int i=1;i<n;i++){
+                t = new Node;
+                t->data = A[i];
+                last->next = t;
+                t->prev = last;
+                t->next = NULL;
+                last = t;
+            }
+        }
 
-int Delete(Node *p,int pos){
-    int x = -1;
-    if(pos<1 || pos>Length(p)){
-        return -1;
-    }
-    if(pos==1){
-        first = first->next;
-        if(first){
-            first->prev = NULL;
+        void display(){
+            Node *p = head;
+            while(p!=NULL){
+                cout<<p->data<<" ";
+                p = p->next;
+            }
         }
-        x = p->data;
-    }
-    else{
-        for(int i=0;i<pos-1;i++){
-            p = p->next;
+
+        int count(){
+            Node *p = head;
+            int count = 0;
+            while(p!=NULL){
+                count++;
+                p = p->next;
+            }
+            return count;
         }
-        p->prev->next = p->next;
-        if(p->next){
-            p->next->prev = p->prev;
+
+        void insert(int pos,int val){
+            Node *p = head;
+            if(pos<0 || pos>count()){
+                return;
+            }
+            if(pos==0){
+                Node *t;
+                t = new Node;
+                t->data = val;
+                t->next = head;
+                head->prev = t;
+                head = t;
+            }
+            else{
+                for(int i=0;i<pos-1;i++){
+                    p = p->next;
+                }
+                Node *t;
+                t = new Node;
+                t->data = val;
+                t->next = p->next;
+                t->prev = p;
+                if(p->next){
+                    p->next->prev = t;
+                }
+                p->next = t;
+            }  
         }
-        x = p->data;
-    }
-    return x;
-}
+
+        int deleteLL(int pos){
+            int x = -1;
+            Node *p = head;
+            if(pos<1 || pos>count()){
+                return -1;
+            }
+            if(pos==1){
+                head = head->next;
+                if(head!=NULL){
+                    head->prev = NULL;
+                }
+                x = p->data;
+                delete p;
+                return x;
+            }
+            else{
+                for(int i=0;i<pos-1;i++){
+                    p = p->next;
+                }
+                p->prev->next = p->next;
+                if(p->next!=NULL){
+                    p->next->prev = p->prev;
+                }
+                x = p->data;
+                delete p;
+                return x;
+            }
+        }
+};
+
 int main(){
-    int A[] = {2, 6, 3, 7, 4};
+    int A[] = {1,2,3,4,5,6,7,8};
+    cout<<endl;
+    DoublyLL p(A,8);
+    p.display();
+    cout<<endl;
 
-    Create(A, 5);
-    cout << "Length : " << Length(first) << "\n";
-    Display(first);
-    cout<<"\n";
-    Delete(first,5);
-    Display(first);
 
+    p.insert(7,12);
+    p.display();
+    cout<<endl;
+    p.deleteLL(9);
+    p.display();
+
+    
+    
 
     return 0;
 }
