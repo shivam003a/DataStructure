@@ -54,28 +54,54 @@ char Stack::stackTop(){
     return -1;
 }
 
-bool isBalanced(string s,Stack st){
-    for(int i=0;i<s.length();i++){
-        if(s[i]=='('){
-            st.push(s[i]);
+int isOperand(char x){
+    if(x=='+' || x == '-' || x=='*' || x=='/'){
+        return 0;
+    }
+    return 1;
+}
+
+int precedence(char x){
+    if(x=='+' || x=='-'){
+        return 1;
+    }
+    else if(x=='*' || x=='/'){
+        return 2;
+    }
+    return 0;
+}
+
+
+// it does not consider the associstivity of the expression and the paranthesis.
+string infToPost(string inf,Stack st){
+    string postfix = "";
+    int i=0;
+    while(i<inf.length()){
+        if(isOperand(inf[i])){
+            postfix += inf[i];
+            i++;
         }
         else{
-            if(s[i]==')'){
-                if(st.isEmpty()){
-                    return false;
-                }
-                st.pop();
+            if(precedence(inf[i])>precedence(st.stackTop())){
+                st.push(inf[i++]);
+            }
+            else{
+                postfix += st.pop();
             }
         }
     }
-    if(st.isEmpty()) return true;
-    else return false;
+    while(!st.isEmpty()){
+        postfix += st.pop();
+    }
+    return postfix;
+
 }
 
 int main(){
-    string s = "(a+b)+(c-s)";
+    string s = "a+b-c*d/2";
     Stack st(s.length());
-    cout<<isBalanced(s,st)<<endl;
+    st.push('#');
+    cout<<infToPost(s,st);
 
     return 0;
 }
