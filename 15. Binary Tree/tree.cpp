@@ -57,19 +57,9 @@ class Queue{
             }
             return x;
         }
-        void display(){
-            int i = front+1;
-            do{
-                cout<<Q[i]<<" ";
-                i = (i+1)%size;
-            }while(i!=(rear+1)%size);
-            cout<<"\n";
-        }
-
 };
 
-void create(){
-    Queue q(100);
+void create(Queue q){
     Node *p,*t;
 
     int x;
@@ -105,38 +95,94 @@ void create(){
 }
 
 void inorder(Node *p){
-        if(p){
-            inorder(p->lchild);
-            cout<<p->data<<" ";
-            inorder(p->rchild);
+    if(p){
+        inorder(p->lchild);
+        cout<<p->data<<" ";
+        inorder(p->rchild);
+    }
+}
+
+void iInorder(Node *p){
+    stack<Node *> stk;
+
+    while(!stk.empty() || p!=NULL){
+        if(p!=NULL){
+            stk.push(p);
+            p = p->lchild;
         }
+        else{
+            p = stk.top();
+            stk.pop();
+            cout<<p->data<<" ";
+            p = p->rchild;
+        }
+    }
 }
 
 void preorder(Node *p){
-        if(p){
+    if(p){
+        cout<<p->data<<" ";
+        preorder(p->lchild);
+        preorder(p->rchild);
+    }
+}
+
+void iPreorder(Node *p){
+    stack<Node *> stk;
+
+    while(!stk.empty() || p!=NULL){
+        if(p!=NULL){
             cout<<p->data<<" ";
-            preorder(p->lchild);
-            preorder(p->rchild);
+            stk.push(p);
+            p = p->lchild;
         }
+        else{
+            p = stk.top();
+            stk.pop();
+            p = p->rchild;
+        }
+    }
 }
 
 void postorder(Node *p){
-        if(p){
-            postorder(p->lchild);
-            postorder(p->rchild);
-            cout<<p->data<<" ";
+    if(p){
+        postorder(p->lchild);
+        postorder(p->rchild);
+        cout<<p->data<<" ";
+    }
+}
+
+void levelOrder(Node *p){
+    queue<Node *> q;
+
+    cout<<p->data<<" ";
+    q.push(p);
+
+    while(!q.empty()){
+        p = q.front();
+        q.pop();
+        if(p->lchild){
+            cout<<p->lchild->data<<" ";
+            q.push(p->lchild);
         }
+        if(p->rchild){
+            cout<<p->rchild->data<<" ";
+            q.push(p->rchild);
+        }
+    }
 }
 
 int main(){
-    create();
+    Queue q(100);
+    create(q);
 
     inorder(root);
     cout<<endl;
-    preorder(root);
-    cout<<endl;
-    postorder(root);
-    cout<<endl;
+    levelOrder(root);
+    // preorder(root);
+    // cout<<endl;
+    // postorder(root);
+    // cout<<endl;
     
 
     return 0;
