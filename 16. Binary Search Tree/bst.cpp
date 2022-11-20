@@ -197,7 +197,7 @@ int main(){
         cout<<"Key Not Found\n";
     }
 
-    bst.Delete(bst.root,11);
+    bst.Delete(bst.root,12);
     bst.Inorder(bst.root);
     
 
